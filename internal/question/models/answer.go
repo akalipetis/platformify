@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,7 +27,8 @@ type Answers struct {
 	Disk               string                            `json:"disk"`
 	Mounts             map[string]map[string]string      `json:"mounts"`
 	Services           []Service                         `json:"services"`
-	WorkingDirectory   string                            `json:"working_directory"`
+	Cwd                string                            `json:"cwd"`
+	WorkingDirectory   fs.FS                             `json:"working_directory"`
 	HasGit             bool                              `json:"has_git"`
 	FilesCreated       []string                          `json:"files_created"`
 	Locations          map[string]map[string]interface{} `json:"locations"`
@@ -45,14 +47,14 @@ type RuntimeType struct {
 	Version string
 }
 
-func (t RuntimeType) String() string {
+func (t *RuntimeType) String() string {
 	if t.Version != "" {
 		return t.Runtime.String() + ":" + t.Version
 	}
 	return t.Runtime.String()
 }
 
-func (t RuntimeType) MarshalJSON() ([]byte, error) {
+func (t *RuntimeType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.String())
 }
 

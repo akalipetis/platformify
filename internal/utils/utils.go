@@ -6,6 +6,7 @@ import (
 	"cmp"
 	"encoding/json"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -22,15 +23,15 @@ var skipDirs = []string{
 }
 
 // FileExists checks if the file exists
-func FileExists(searchPath, name string) bool {
-	return FindFile(searchPath, name) != ""
+func FileExists(fileSystem fs.FS, searchPath, name string) bool {
+	return FindFile(fileSystem, searchPath, name) != ""
 }
 
 // FindFile searches for the file inside the path recursively
 // and returns the full path of the file if found
 // If multiple files exist, tries to return the one closest to root
-func FindFile(searchPath, name string) string {
-	files := FindAllFiles(searchPath, name)
+func FindFile(fileSystem fs.FS, searchPath, name string) string {
+	files := FindAllFiles(fileSystem, searchPath, name)
 	if len(files) == 0 {
 		return ""
 	}
@@ -42,9 +43,12 @@ func FindFile(searchPath, name string) string {
 }
 
 // FindAllFiles searches for the file inside the path recursively and returns all matches
-func FindAllFiles(searchPath, name string) []string {
+func FindAllFiles(fileSystem fs.FS, searchPath, name string) []string {
 	found := make([]string, 0)
-	_ = filepath.WalkDir(searchPath, func(p string, d os.DirEntry, err error) error {
+	if searchPath == "" {
+		searchPath = "."
+	}
+	_ = fs.WalkDir(fileSystem, searchPath, func(p string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -90,14 +94,13 @@ func GetMapValue(keyPath []string, data map[string]interface{}) (value interface
 }
 
 // GetJSONValue gets a value from a JSON file, by traversing the path given
-func GetJSONValue(keyPath []string, filePath string, caseInsensitive bool) (value interface{}, ok bool) {
-	fin, err := os.Open(filePath)
-	if err != nil {
-		return nil, false
-	}
-	defer fin.Close()
-
-	rawData, err := io.ReadAll(fin)
+func GetJSONValue(
+	fileSystem fs.FS,
+	keyPath []string,
+	filePath string,
+	caseInsensitive bool,
+) (value interface{}, ok bool) {
+	rawData, err := fs.ReadFile(fileSystem, filePath)
 	if err != nil {
 		return nil, false
 	}
@@ -144,14 +147,13 @@ func ContainsStringInFile(file io.Reader, target string, caseInsensitive bool) (
 }
 
 // GetTOMLValue gets a value from a TOML file, by traversing the path given
-func GetTOMLValue(keyPath []string, filePath string, caseInsensitive bool) (value interface{}, ok bool) {
-	fin, err := os.Open(filePath)
-	if err != nil {
-		return nil, false
-	}
-	defer fin.Close()
-
-	rawData, err := io.ReadAll(fin)
+func GetTOMLValue(
+	fileSystem fs.FS,
+	keyPath []string,
+	filePath string,
+	caseInsensitive bool,
+) (value interface{}, ok bool) {
+	rawData, err := fs.ReadFile(fileSystem, filePath)
 	if err != nil {
 		return nil, false
 	}

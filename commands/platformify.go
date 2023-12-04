@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
+	"path"
 
 	"github.com/spf13/cobra"
 
@@ -46,7 +48,6 @@ func Platformify(ctx context.Context, stdout, stderr io.Writer, assets *vendoriz
 	)
 	q := questionnaire.New(
 		&question.WorkingDirectory{},
-		&question.FilesOverwrite{},
 		&question.Welcome{},
 		&question.Stack{},
 		&question.Type{},
@@ -69,17 +70,40 @@ func Platformify(ctx context.Context, stdout, stderr io.Writer, assets *vendoriz
 	}
 
 	if err != nil {
-		fmt.Fprintln(stderr, colors.Colorize(colors.ErrorCode, err.Error()))
+		fmt.Fprintln(cmd.ErrOrStderr(), colors.Colorize(colors.ErrorCode, err.Error()))
 		return err
 	}
 
 	input := answers.ToUserInput()
 
 	pfier := platformifier.New(input, assets.ConfigFlavor)
-	err = pfier.Platformify(ctx)
+	configFiles, err := pfier.Platformify(ctx)
 	if err != nil {
-		fmt.Fprintln(stderr, colors.Colorize(colors.ErrorCode, err.Error()))
+		fmt.Fprintln(cmd.ErrOrStderr(), colors.Colorize(colors.ErrorCode, err.Error()))
 		return fmt.Errorf("could not configure project: %w", err)
+	}
+
+	filesToCreateUpdate := make([]string, 0, len(configFiles))
+	for file := range configFiles {
+		filesToCreateUpdate = append(filesToCreateUpdate, file)
+	}
+
+	filesOverwrite := question.FilesOverwrite{FilesToCreateUpdate: filesToCreateUpdate}
+	if err := filesOverwrite.Ask(ctx); err != nil {
+		return err
+	}
+
+	for file, contents := range configFiles {
+		filePath := path.Join(answers.Cwd, file)
+		if err := os.MkdirAll(path.Dir(filePath), os.ModeDir|os.ModePerm); err != nil {
+			fmt.Fprintf(cmd.ErrOrStderr(), "Could not create parent directories of file %s: %s\n", file, err)
+			continue
+		}
+
+		if err := os.WriteFile(filePath, contents, 0o664); err != nil {
+			fmt.Fprintf(cmd.ErrOrStderr(), "Could not write file %s: %s\n", file, err)
+			continue
+		}
 	}
 
 	done := question.Done{}
