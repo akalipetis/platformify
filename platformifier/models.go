@@ -27,6 +27,9 @@ const (
 	Flask
 	Express
 	Rails
+	Symfony
+	Ibexa
+	Shopware
 )
 
 type Stack int
@@ -49,6 +52,12 @@ func (s Stack) Name() string {
 		return "flask"
 	case Express:
 		return "express"
+	case Symfony:
+		return "symfony"
+	case Ibexa:
+		return "ibexa"
+	case Shopware:
+		return "shopware"
 	default:
 		return ""
 	}

@@ -7,31 +7,32 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/platformsh/platformify/discovery"
 	"github.com/platformsh/platformify/platformifier"
 )
 
 type Answers struct {
-	Stack              Stack                             `json:"stack"`
-	Flavor             string                            `json:"flavor"`
-	Type               RuntimeType                       `json:"type"`
-	Name               string                            `json:"name"`
-	ApplicationRoot    string                            `json:"application_root"`
-	Environment        map[string]string                 `json:"environment"`
-	BuildSteps         []string                          `json:"build_steps"`
-	WebCommand         string                            `json:"web_command"`
-	SocketFamily       SocketFamily                      `json:"socket_family"`
-	DeployCommand      []string                          `json:"deploy_command"`
-	DependencyManagers []DepManager                      `json:"dependency_managers"`
-	Dependencies       map[string]map[string]string      `json:"dependencies"`
-	BuildFlavor        string                            `json:"build_flavor"`
-	Disk               string                            `json:"disk"`
-	Mounts             map[string]map[string]string      `json:"mounts"`
-	Services           []Service                         `json:"services"`
-	Cwd                string                            `json:"cwd"`
-	WorkingDirectory   fs.FS                             `json:"working_directory"`
-	HasGit             bool                              `json:"has_git"`
-	FilesCreated       []string                          `json:"files_created"`
-	Locations          map[string]map[string]interface{} `json:"locations"`
+	Stack              Stack
+	Flavor             string
+	Type               RuntimeType
+	Name               string
+	ApplicationRoot    string
+	Environment        map[string]string
+	BuildSteps         []string
+	WebCommand         string
+	SocketFamily       SocketFamily
+	DeployCommand      []string
+	DependencyManagers []DepManager
+	Dependencies       map[string]map[string]string
+	BuildFlavor        string
+	Disk               string
+	Mounts             map[string]map[string]string
+	Services           []Service
+	Cwd                string
+	WorkingDirectory   fs.FS
+	HasGit             bool
+	FilesCreated       []string
+	Discoverer         *discovery.Discoverer
 }
 
 type Service struct {
