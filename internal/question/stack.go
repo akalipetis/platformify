@@ -34,8 +34,8 @@ func (q *Stack) Ask(ctx context.Context) error {
 	}
 
 	defer func() {
-		_, stderr, ok := colors.FromContext(ctx)
-		if !ok {
+		_, stderr, stderrOK := colors.FromContext(ctx)
+		if !stderrOK {
 			return
 		}
 		if answers.Stack != models.GenericStack {

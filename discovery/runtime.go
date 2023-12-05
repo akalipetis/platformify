@@ -1,6 +1,9 @@
 package discovery
 
-import "github.com/platformsh/platformify/platformifier"
+import (
+	"github.com/platformsh/platformify/internal/utils"
+	"github.com/platformsh/platformify/platformifier"
+)
 
 var (
 	languageMap = map[string]string{
@@ -52,7 +55,7 @@ func (d *Discoverer) discoverType() (string, error) {
 		return "nodejs", nil
 	}
 
-	extCount, err := d.CountFiles()
+	extCount, err := utils.CountFiles(d.fileSystem)
 	if err != nil {
 		return "", err
 	}

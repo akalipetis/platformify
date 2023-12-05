@@ -26,8 +26,6 @@ const (
 )
 
 // A platformifier handles the business logic of a given runtime to platformify.
-//
-//go:generate mockgen -destination=platformifier_mock_test.go -package=platformifier -source=platformifier.go
 type platformifier interface {
 	// Platformify loads and returns the rendered templates that should be written to the user's system.
 	Platformify(ctx context.Context, input *UserInput) (map[string][]byte, error)

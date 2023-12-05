@@ -7,6 +7,7 @@ import (
 	"testing"
 	"testing/fstest"
 
+	"github.com/platformsh/platformify/discovery"
 	"github.com/platformsh/platformify/internal/question/models"
 )
 
@@ -53,6 +54,7 @@ func TestDependencyManager_Ask(t *testing.T) {
 			q := &DependencyManager{}
 			a := models.NewAnswers()
 			a.WorkingDirectory = tt.fileSystem
+			a.Discoverer = discovery.New(tt.fileSystem)
 			ctx := models.ToContext(context.Background(), a)
 
 			if err := q.Ask(ctx); err != nil {

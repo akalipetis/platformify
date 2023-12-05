@@ -6,6 +6,7 @@ import (
 	"testing"
 	"testing/fstest"
 
+	"github.com/platformsh/platformify/discovery"
 	"github.com/platformsh/platformify/internal/question/models"
 )
 
@@ -73,6 +74,7 @@ fLaSk = "^1.2.3"
 			q := &Stack{}
 			a := models.NewAnswers()
 			a.WorkingDirectory = tt.fileSystem
+			a.Discoverer = discovery.New(tt.fileSystem)
 			ctx := models.ToContext(context.Background(), a)
 
 			if err := q.Ask(ctx); (err != nil) != tt.wantErr {

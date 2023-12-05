@@ -75,7 +75,6 @@ type UserInput struct {
 	ApplicationRoot    string
 	Name               string
 	Type               string
-	Runtime            string
 	Environment        map[string]string
 	BuildSteps         []string
 	WebCommand         string

@@ -120,7 +120,6 @@ func (a *Answers) ToUserInput() *platformifier.UserInput {
 		ApplicationRoot:    filepath.Join(string(os.PathSeparator), a.ApplicationRoot),
 		Name:               a.Name,
 		Type:               a.Type.String(),
-		Runtime:            a.Type.Runtime.String(),
 		Environment:        a.Environment,
 		BuildSteps:         a.BuildSteps,
 		WebCommand:         a.WebCommand,
