@@ -30,7 +30,7 @@ func (d *Discoverer) CountFiles() (map[string]int, error) {
 			fileCounter[ext] = 0
 		}
 
-		fileCounter[ext] += 1
+		fileCounter[ext]++
 		return nil
 	})
 	if err != nil {

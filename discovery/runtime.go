@@ -6,7 +6,7 @@ var (
 	languageMap = map[string]string{
 		".py":   "python",
 		".js":   "nodejs",
-		".go":   "go",
+		".go":   "golang",
 		".php":  "php",
 		".rb":   "ruby",
 		".exs":  "elixir",

@@ -41,11 +41,19 @@ func (q *Type) Ask(ctx context.Context) error {
 		}
 	}()
 
-	runtime := models.RuntimeForStack(answers.Stack)
-	if runtime == nil {
+	typ, err := answers.Discoverer.Type()
+	if err != nil {
+		return err
+	}
+
+	runtime, _ := models.Runtimes.RuntimeByType(typ)
+	if runtime == nil || answers.Stack == models.GenericStack {
 		question := &survey.Select{
 			Message: "What language is your project using? We support the following:",
 			Options: models.Runtimes.AllTitles(),
+		}
+		if runtime != nil {
+			question.Default = runtime.Title()
 		}
 
 		var title string

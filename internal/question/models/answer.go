@@ -32,6 +32,7 @@ type Answers struct {
 	WorkingDirectory   fs.FS
 	HasGit             bool
 	FilesCreated       []string
+	Locations          map[string]map[string]interface{}
 	Discoverer         *discovery.Discoverer
 }
 
