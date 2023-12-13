@@ -12,12 +12,12 @@ var (
 		lockFile string
 		name     string
 	}{
-		{lockFile: "yarn.lock", name: "yarn", lang: "nodejs"},
-		{lockFile: "package-lock.json", name: "npm", lang: "nodejs"},
 		{lockFile: "poetry.lock", name: "poetry", lang: "python"},
 		{lockFile: "Pipfile.lock", name: "pipenv", lang: "python"},
 		{lockFile: "requirements.txt", name: "pip", lang: "python"},
 		{lockFile: "composer.lock", name: "composer", lang: "php"},
+		{lockFile: "yarn.lock", name: "yarn", lang: "nodejs"},
+		{lockFile: "package-lock.json", name: "npm", lang: "nodejs"},
 	}
 )
 
@@ -51,4 +51,55 @@ func (d *Discoverer) discoverDependencyManagers() ([]string, error) {
 	}
 
 	return dependencyManagers, nil
+}
+
+func (d *Discoverer) pythonPrefix() string {
+	dependencyManagers, err := d.DependencyManagers()
+	if err != nil {
+		return ""
+	}
+
+	if slices.Contains(dependencyManagers, "pipenv") {
+		return "pipenv run "
+	}
+
+	if slices.Contains(dependencyManagers, "poetry") {
+		return "poetry run "
+	}
+
+	return ""
+}
+
+func (d *Discoverer) nodeScriptPrefix() string {
+	dependencyManagers, err := d.DependencyManagers()
+	if err != nil {
+		return ""
+	}
+
+	if slices.Contains(dependencyManagers, "yarn") {
+		return "yarn "
+	}
+
+	if slices.Contains(dependencyManagers, "npm") {
+		return "npm run "
+	}
+
+	return ""
+}
+
+func (d *Discoverer) nodeExecPrefix() string {
+	dependencyManagers, err := d.DependencyManagers()
+	if err != nil {
+		return ""
+	}
+
+	if slices.Contains(dependencyManagers, "yarn") {
+		return "yarn exec"
+	}
+
+	if slices.Contains(dependencyManagers, "npm") {
+		return "npm exec "
+	}
+
+	return ""
 }

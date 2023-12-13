@@ -116,7 +116,6 @@ func (a *Answers) ToUserInput() *platformifier.UserInput {
 
 	return &platformifier.UserInput{
 		Stack:              getStack(a.Stack),
-		Root:               "",
 		ApplicationRoot:    filepath.Join(string(os.PathSeparator), a.ApplicationRoot),
 		Name:               a.Name,
 		Type:               a.Type.String(),
