@@ -14,6 +14,7 @@ func TestBuildSteps_Ask(t *testing.T) {
 		answers models.Answers
 	}
 	nodeJS, _ := models.Runtimes.RuntimeByType("nodejs")
+	ruby, _ := models.Runtimes.RuntimeByType("ruby")
 	tests := []struct {
 		name       string
 		q          *BuildSteps
@@ -54,7 +55,7 @@ func TestBuildSteps_Ask(t *testing.T) {
 			q:    &BuildSteps{},
 			args: args{models.Answers{
 				Stack:              models.GenericStack,
-				Type:               models.RuntimeType{Runtime: models.Ruby, Version: "3.3"},
+				Type:               models.RuntimeType{Runtime: *ruby, Version: "3.3"},
 				Dependencies:       map[string]map[string]string{},
 				DependencyManagers: []models.DepManager{models.Bundler},
 				Environment:        map[string]string{},
@@ -67,7 +68,7 @@ func TestBuildSteps_Ask(t *testing.T) {
 			q:    &BuildSteps{},
 			args: args{models.Answers{
 				Stack:              models.Rails,
-				Type:               models.RuntimeType{Runtime: models.Ruby, Version: "3.3"},
+				Type:               models.RuntimeType{Runtime: *ruby, Version: "3.3"},
 				Dependencies:       map[string]map[string]string{},
 				DependencyManagers: []models.DepManager{models.Bundler},
 				Environment:        map[string]string{},

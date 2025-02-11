@@ -3,6 +3,7 @@ package discovery
 import (
 	"io/fs"
 	"reflect"
+	"slices"
 	"testing"
 	"testing/fstest"
 )
@@ -59,6 +60,7 @@ func TestDiscoverer_discoverDependencyManagers(t *testing.T) {
 				memory:     tt.fields.memory,
 			}
 			got, err := d.discoverDependencyManagers()
+			slices.Sort(got)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Discoverer.discoverDependencyManagers() error = %v, wantErr %v", err, tt.wantErr)
 				return

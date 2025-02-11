@@ -70,7 +70,7 @@ func Platformify(ctx context.Context, stdout, stderr io.Writer, assets *vendoriz
 	}
 
 	if err != nil {
-		fmt.Fprintln(cmd.ErrOrStderr(), colors.Colorize(colors.ErrorCode, err.Error()))
+		fmt.Fprintln(stderr, colors.Colorize(colors.ErrorCode, err.Error()))
 		return err
 	}
 
@@ -79,7 +79,7 @@ func Platformify(ctx context.Context, stdout, stderr io.Writer, assets *vendoriz
 	pfier := platformifier.New(input, assets.ConfigFlavor)
 	configFiles, err := pfier.Platformify(ctx)
 	if err != nil {
-		fmt.Fprintln(cmd.ErrOrStderr(), colors.Colorize(colors.ErrorCode, err.Error()))
+		fmt.Fprintln(stderr, colors.Colorize(colors.ErrorCode, err.Error()))
 		return fmt.Errorf("could not configure project: %w", err)
 	}
 
@@ -96,12 +96,12 @@ func Platformify(ctx context.Context, stdout, stderr io.Writer, assets *vendoriz
 	for file, contents := range configFiles {
 		filePath := path.Join(answers.Cwd, file)
 		if err := os.MkdirAll(path.Dir(filePath), os.ModeDir|os.ModePerm); err != nil {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Could not create parent directories of file %s: %s\n", file, err)
+			fmt.Fprintf(stderr, "Could not create parent directories of file %s: %s\n", file, err)
 			continue
 		}
 
 		if err := os.WriteFile(filePath, contents, 0o664); err != nil {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Could not write file %s: %s\n", file, err)
+			fmt.Fprintf(stderr, "Could not write file %s: %s\n", file, err)
 			continue
 		}
 	}

@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"slices"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 
 	"github.com/platformsh/platformify/internal/colors"
 	"github.com/platformsh/platformify/internal/question/models"
 	"github.com/platformsh/platformify/internal/questionnaire"
+	"github.com/platformsh/platformify/internal/utils"
 	"github.com/platformsh/platformify/platformifier"
 	"github.com/platformsh/platformify/vendorization"
 )
@@ -105,6 +104,8 @@ func (q *Stack) Ask(ctx context.Context) error {
 				return nil
 			}
 		}
+	}
+
 	confirm := true
 	if err := survey.AskOne(
 		&survey.Confirm{

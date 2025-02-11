@@ -109,7 +109,7 @@ func RuntimeForStack(stack Stack) *Runtime {
 			return r
 		}
 		return nil
-	default:
-		return nil
 	}
+
+	return nil
 }
